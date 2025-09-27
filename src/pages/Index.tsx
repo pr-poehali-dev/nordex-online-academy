@@ -5,9 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
+import CoursePage from '@/components/CoursePage';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('hero');
+  const [currentView, setCurrentView] = useState<'home' | 'course'>('home');
+  const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
 
   const courses = [
     {
@@ -174,6 +177,17 @@ const Index = () => {
     }
   };
 
+  if (currentView === 'course') {
+    return (
+      <CoursePage 
+        onBack={() => {
+          setCurrentView('home');
+          setSelectedCourse(null);
+        }} 
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Navigation */}
@@ -324,7 +338,13 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => {
+                      setSelectedCourse(course.id);
+                      setCurrentView('course');
+                    }}
+                  >
                     Подробнее о курсе
                   </Button>
                 </CardContent>
