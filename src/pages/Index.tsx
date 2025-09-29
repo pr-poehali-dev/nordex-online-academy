@@ -6,10 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
 import CoursePage from '@/components/CoursePage';
+import CareerPage from '@/components/CareerPage';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('hero');
-  const [currentView, setCurrentView] = useState<'home' | 'course'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'course' | 'career'>('home');
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
 
   const courses = [
@@ -188,6 +189,16 @@ const Index = () => {
     );
   }
 
+  if (currentView === 'career') {
+    return (
+      <CareerPage 
+        onBack={() => {
+          setCurrentView('home');
+        }} 
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Navigation */}
@@ -204,17 +215,24 @@ const Index = () => {
             
             <div className="hidden md:flex items-center space-x-8">
               {[
-                { id: 'courses', label: 'Курсы' },
-                { id: 'instructors', label: 'Преподаватели' },
-                { id: 'about', label: 'О нас' },
-                { id: 'portfolio', label: 'Портфолио' },
-                { id: 'testimonials', label: 'Отзывы' },
-                { id: 'blog', label: 'Блог' },
-                { id: 'contacts', label: 'Контакты' }
+                { id: 'courses', label: 'Курсы', action: 'scroll' },
+                { id: 'instructors', label: 'Преподаватели', action: 'scroll' },
+                { id: 'about', label: 'О нас', action: 'scroll' },
+                { id: 'portfolio', label: 'Портфолио', action: 'scroll' },
+                { id: 'testimonials', label: 'Отзывы', action: 'scroll' },
+                { id: 'blog', label: 'Блог', action: 'scroll' },
+                { id: 'career', label: 'Карьера', action: 'navigate' },
+                { id: 'contacts', label: 'Контакты', action: 'scroll' }
               ].map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => scrollToSection(item.id)}
+                  onClick={() => {
+                    if (item.action === 'navigate' && item.id === 'career') {
+                      setCurrentView('career');
+                    } else {
+                      scrollToSection(item.id);
+                    }
+                  }}
                   className={`text-sm font-medium transition-colors hover:text-blue-600 ${
                     activeSection === item.id ? 'text-blue-600' : 'text-slate-700'
                   }`}
@@ -712,7 +730,14 @@ const Index = () => {
               <ul className="space-y-2 text-slate-400">
                 <li><a href="#" className="hover:text-white">О нас</a></li>
                 <li><a href="#" className="hover:text-white">Преподаватели</a></li>
-                <li><a href="#" className="hover:text-white">Карьера</a></li>
+                <li>
+                  <button 
+                    onClick={() => setCurrentView('career')}
+                    className="hover:text-white text-left"
+                  >
+                    Карьера
+                  </button>
+                </li>
                 <li><a href="#" className="hover:text-white">Контакты</a></li>
               </ul>
             </div>
